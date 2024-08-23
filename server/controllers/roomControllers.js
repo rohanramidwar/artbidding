@@ -28,7 +28,7 @@ export const joinRoom = async (req, res) => {
   const clerkUser = await User.findOne({ clerkUserId });
 
   try {
-    const added = await Room.findByIdAndUpdate(
+    let added = await Room.findByIdAndUpdate(
       roomId,
       {
         $push: { bidders: clerkUser._id },
@@ -36,7 +36,39 @@ export const joinRoom = async (req, res) => {
       { new: true }
     );
 
+    added = await Room.findById(roomId)
+      .populate("currentBid", "bid")
+      .populate("roomAdmin", "firstName lastName profilePic")
+      .populate("bidders", "clerkUserId firstName lastName profilePic");
+
     res.status(201).json(added);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+};
+
+export const fetchAllRooms = async (req, res) => {
+  try {
+    const allRooms = await Room.find({})
+      .sort({ _id: -1 })
+      .populate("currentBid", "bid");
+
+    res.status(201).json(allRooms);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+};
+
+export const fetchRoom = async (req, res) => {
+  const { roomId } = req.params;
+
+  try {
+    let room = await Room.findById(roomId)
+      .populate("currentBid", "bid")
+      .populate("roomAdmin", "firstName lastName profilePic")
+      .populate("bidders", "clerkUserId firstName lastName profilePic");
+
+    res.status(201).json(room);
   } catch (error) {
     res.status(409).json({ message: error.message });
   }
