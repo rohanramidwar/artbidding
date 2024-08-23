@@ -1,31 +1,31 @@
 import React from "react";
-import logo from "../assets/bid.png";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <nav className="bg-zinc-100 shadow text-slate-800 py-5 px-10 flex w-full justify-between items-center">
-      <img src={logo} className="w-10   " alt="artbid" />
-      <ul className="flex gap-8">
-        <Link to={"/"}>
-          <Button className="text-slate-800 bg-zinc-200 hover:bg-zinc-300">
-            All Auctions
-          </Button>
-        </Link>
-        <Link to={"/create-auction"}>
-          <Button className="text-slate-800 bg-zinc-200 hover:bg-zinc-300">
-            Create Auction
-          </Button>
-        </Link>
-        <Link to={"/my-auctions"}>
-          <Button className="text-slate-800 bg-zinc-200 hover:bg-zinc-300">
-            My Auctions
-          </Button>
-        </Link>
-      </ul>
+    <nav className="flex justify-between py-2 px-6 bg-zinc-100 shadow items-center text-slate-800">
+      <Link to="/">
+        <div>Bidding-Wars</div>
+      </Link>
       <div>
-        <Button>Sign in</Button>
+        <Link to="/create-room">
+          <Button variant="outline">Create auction</Button>
+        </Link>
+      </div>
+      <div>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
       </div>
     </nav>
   );
