@@ -11,7 +11,17 @@ export const placeBid = async (req, res) => {
   try {
     let bade = await newBid.save();
 
-    bade = await bade.populate("bidder", "firstName lastName profilePic");
+    bade = await bade.populate(
+      "bidder",
+      "firstName lastName profilePic clerkUserId"
+    );
+
+    bade = await bade.populate("room");
+
+    bade = await User.populate(bade, {
+      path: "room.bidders",
+      select: "clerkUserId firstName lastName profilePic",
+    });
 
     let updatedRoom = await Room.findByIdAndUpdate(room, { currentBid: bade });
 
@@ -31,7 +41,7 @@ export const fetchBids = async (req, res) => {
 
   try {
     const bids = await Bid.find({ room: roomId })
-      .populate("bidder", "firstName lastName profilePic")
+      .populate("bidder", "firstName lastName profilePic clerkUserId")
       .sort({ _id: -1 });
 
     res.status(201).json(bids);
