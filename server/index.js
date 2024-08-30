@@ -119,6 +119,19 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("updated room", (updatedRoomReceived) => {
+    if (!updatedRoomReceived.bidders)
+      return console.log("room.bidders not defined");
+
+    updatedRoomReceived.bidders.forEach((bidder) => {
+      if (bidder._id === updatedRoomReceived.currentBid._id) return;
+
+      socket
+        .in(bidder.clerkUserId)
+        .emit("updated room received", updatedRoomReceived);
+    });
+  });
+
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");
     socket.leave(clerkUserId);

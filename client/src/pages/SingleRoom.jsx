@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBids, joinRoom, placeBid } from "@/actions/roomActions";
 import { io } from "socket.io-client";
-import { UPDATE_BIDS } from "@/constants/actionTypes";
+import { FETCH_ROOM, UPDATE_BIDS } from "@/constants/actionTypes";
 
 const ENDPOINT = "http://localhost:5000";
 
@@ -73,6 +73,24 @@ const SingleRoom = () => {
 
       return () => {
         socketRef.current.off("bid received", handleBid);
+      };
+    }
+  }, [isSignedIn, selectedRoom, dispatch]);
+
+  useEffect(() => {
+    if (isSignedIn && socketRef.current) {
+      const handleRoomUpdate = (updatedRoomReceived) => {
+        if (selectedRoom?._id !== updatedRoomReceived._id) {
+          //notify
+        } else {
+          dispatch({ type: FETCH_ROOM, payload: updatedRoomReceived });
+        }
+      };
+
+      socketRef.current.on("updated room received", handleRoomUpdate);
+
+      return () => {
+        socketRef.current.off("updated room received", handleRoomUpdate);
       };
     }
   }, [isSignedIn, selectedRoom, dispatch]);
