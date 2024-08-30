@@ -11,7 +11,7 @@ const ENDPOINT = "http://localhost:5000";
 
 const SingleRoom = () => {
   const dispatch = useDispatch();
-  const socketRef = useRef();
+  const socketRef = useRef(); //current socket
 
   const { isSignedIn, userId } = useAuth();
   const { isLoading, selectedRoom, allBids } = useSelector(
@@ -37,6 +37,7 @@ const SingleRoom = () => {
     }
   };
 
+  //socket connection
   useEffect(() => {
     if (isSignedIn) {
       if (!socketRef.current) {
@@ -59,6 +60,7 @@ const SingleRoom = () => {
     }
   }, [selectedRoom]);
 
+  //update bid(socket)
   useEffect(() => {
     if (isSignedIn && socketRef.current) {
       const handleBid = (newBid) => {
@@ -77,6 +79,7 @@ const SingleRoom = () => {
     }
   }, [isSignedIn, selectedRoom, dispatch]);
 
+  //update room(socket)
   useEffect(() => {
     if (isSignedIn && socketRef.current) {
       const handleRoomUpdate = (updatedRoomReceived) => {
@@ -126,6 +129,7 @@ const SingleRoom = () => {
           )}
         </div>
         <div className="flex flex-col gap-6">
+          {!allBids.length && "No bids yet"}
           {allBids?.map((bid) => (
             <div key={bid?._id}>
               <p>
