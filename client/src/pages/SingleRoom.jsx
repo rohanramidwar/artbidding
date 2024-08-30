@@ -100,9 +100,9 @@ const SingleRoom = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="w-3/4 flex gap-12 justify-between py-12 text-slate-800">
+      <div className="px-6 sm:w-3/4 flex sm:flex-row flex-col gap-12 sm:justify-between py-12 text-slate-800">
         {/* left  */}
-        <div className="w-1/2">
+        <div className="sm:w-1/2">
           <p className="text-4xl pb-6">{selectedRoom?.roomName}</p>
           <p>
             Current bid:{" "}
@@ -123,7 +123,7 @@ const SingleRoom = () => {
         </div>
 
         {/* right */}
-        <div className="flex flex-col w-1/2">
+        <div className="flex flex-col sm:w-1/2">
           <div className="pb-6 flex justify-between items-center">
             <p className="text-2xl">Recent bids</p>
             {selectedRoom?.bidders.find(

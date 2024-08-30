@@ -66,7 +66,7 @@ const CreatePost = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="w-1/2 text-slate-800 p-6">
+      <div className="w-full sm:w-1/2 text-slate-800 p-6">
         <p className="text-2xl my-6">Create post for auction</p>
         <form onSubmit={submitPost} className="flex flex-col gap-3">
           <Input
