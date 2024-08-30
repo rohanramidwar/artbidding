@@ -64,9 +64,14 @@ export const fetchRoom = async (req, res) => {
 
   try {
     let room = await Room.findById(roomId)
-      .populate("currentBid", "bid")
+      .populate("currentBid", "bid bidder")
       .populate("roomAdmin", "firstName lastName profilePic")
       .populate("bidders", "clerkUserId firstName lastName profilePic");
+
+    room = await User.populate(room, {
+      path: "currentBid.bidder",
+      select: "clerkUserId firstName lastName profilePic",
+    });
 
     res.status(201).json(room);
   } catch (error) {
