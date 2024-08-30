@@ -84,6 +84,8 @@ export const placeBid = (bidData, socket) => async (dispatch) => {
     dispatch({ type: END_LOADING });
 
     socket.emit("new bid", bade);
+
+    socket.emit("updated room", updatedRoom);
   } catch (err) {
     console.log(err);
 
