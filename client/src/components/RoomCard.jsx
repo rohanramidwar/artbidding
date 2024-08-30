@@ -16,12 +16,21 @@ const RoomCard = ({ room }) => {
   };
 
   return (
-    <div role="button" onClick={singleRoom} className="p-3 bg-zinc-100">
-      <img src={room.itemPic} alt="item-pic" />
-      <p className="text-lg">{room?.roomName}</p>
+    <div
+      role="button"
+      onClick={singleRoom}
+      className="p-3 bg-zinc-100 border border-zinc-200 rounded-md"
+    >
+      <div className="overflow-clip max-h-40">
+        <img className="" src={room.itemPic} alt="item-pic" />
+      </div>
+      <p className="text-xl pt-2">{room?.roomName}</p>
       <p>
-        Current bid: &#36;
-        {room?.currentBid ? room?.currentBid?.bid : 0}
+        Current bid:{" "}
+        <span className="text-lg">
+          &#36;
+          {room?.currentBid ? room?.currentBid?.bid : 0}{" "}
+        </span>
       </p>
       <p>Opening bid: &#36;{room?.openingBid}</p>
       <p>Ends on: {room?.endsOn}</p>
