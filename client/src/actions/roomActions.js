@@ -109,7 +109,7 @@ export const getAllBids = (roomId, socket) => async (dispatch) => {
   } catch (err) {
     console.log(err);
 
-    toast.error("Error fetching rooms");
+    toast.error("Error fetching bids");
 
     dispatch({ type: END_LOADING });
   }

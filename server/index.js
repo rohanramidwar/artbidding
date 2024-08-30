@@ -109,7 +109,7 @@ io.on("connection", (socket) => {
 
   socket.on("new bid", (newBidReceived) => {
     let room = newBidReceived.room;
-    // console.log("Room: ", room);
+
     if (!room.bidders) return console.log("room.bidders not defined");
 
     room.bidders.forEach((bidder) => {
