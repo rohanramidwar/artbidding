@@ -69,7 +69,7 @@ export const joinRoom = (idz) => async (dispatch) => {
   }
 };
 
-export const placeBid = (bidData) => async (dispatch) => {
+export const placeBid = (bidData, socket) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
 
@@ -82,6 +82,8 @@ export const placeBid = (bidData) => async (dispatch) => {
     dispatch({ type: FETCH_ROOM, payload: updatedRoom }); //sends to reducer
 
     dispatch({ type: END_LOADING });
+
+    socket.emit("new bid", bade);
   } catch (err) {
     console.log(err);
 
@@ -91,7 +93,7 @@ export const placeBid = (bidData) => async (dispatch) => {
   }
 };
 
-export const getAllBids = (roomId) => async (dispatch) => {
+export const getAllBids = (roomId, socket) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
 
@@ -100,6 +102,8 @@ export const getAllBids = (roomId) => async (dispatch) => {
     dispatch({ type: FETCH_ALL_BIDS, payload: data }); //sends to reducer
 
     dispatch({ type: END_LOADING });
+
+    socket.emit("join room", roomId);
   } catch (err) {
     console.log(err);
 

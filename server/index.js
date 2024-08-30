@@ -9,13 +9,21 @@ import bodyParser from "body-parser";
 import User from "./models/userModel.js";
 import mongoose from "mongoose";
 import bidRoutes from "./routes/bidRoutes.js";
+import { Server } from "socket.io";
 
 const app = express();
+
 //enable us to send post req
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -32,10 +40,10 @@ app.post(
   bodyParser.raw({ type: "application/json" }),
   async function (req, res) {
     try {
-      const payloadString = req.body.toString();
+      const payloadString = JSON.stringify(req.body);
       const svixHeaders = req.headers;
 
-      const wh = new Webhook(process.env.WEBHOOK_SECRET);
+      const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET_KEY);
       const evt = wh.verify(payloadString, svixHeaders);
 
       const { id, ...attributes } = evt.data;
@@ -63,16 +71,56 @@ app.post(
         message: "Webhook received",
       });
     } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message,
-      });
+      console.log(error.message),
+        res.status(400).json({
+          success: false,
+          message: error.message,
+        });
     }
   }
 );
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server Started on PORT: ${PORT}`.yellow);
+});
+
+const io = new Server(server, {
+  pingTimeout: 60000, // amount of time it will wait while being inactive
+  cors: {
+    origin: "http://localhost:5173",
+  },
+});
+
+io.on("connection", (socket) => {
+  //personal room
+  console.log("Connected to socket.io");
+  socket.on("setup", (clerkUserId) => {
+    socket.join(clerkUserId);
+    socket.emit("connected");
+    console.log("User: " + clerkUserId);
+  });
+
+  socket.on("join room", (room) => {
+    socket.join(room);
+    console.log("User Joined Room: " + room);
+  });
+
+  socket.on("new bid", (newBidReceived) => {
+    let room = newBidReceived.room;
+    // console.log("Room: ", room);
+    if (!room.bidders) return console.log("room.bidders not defined");
+
+    room.bidders.forEach((bidder) => {
+      if (bidder.clerkUserId === newBidReceived.bidder.clerkUserId) return;
+
+      socket.in(bidder.clerkUserId).emit("bid received", newBidReceived);
+    });
+  });
+
+  socket.off("setup", () => {
+    console.log("USER DISCONNECTED");
+    socket.leave(clerkUserId);
+  });
 });

@@ -1,26 +1,21 @@
 import React from "react";
-import Navbar from "./components/navbar";
-import AllAuctions from "./components/allAuctions";
+import Homepage from "./pages/Homepage";
 import { Route, Routes } from "react-router-dom";
-import CreateAuction from "./components/createAuction";
-import MyAuctions from "./components/myAuctions";
-import ViewAuction from "./components/viewAuction";
+import Navbar from "./components/Navbar";
+import CreatePost from "./components/CreatePost";
+import { Toaster } from "react-hot-toast";
+import SingleRoom from "./pages/SingleRoom";
 
 const App = () => {
   return (
     <>
-      {/* navbar  */}
       <Navbar />
-      {/* all auctions  */}
       <Routes>
-        <Route path="/" Component={AllAuctions} />
-        <Route path="/create-auction" Component={CreateAuction} />
-        <Route path="/my-auctions" Component={MyAuctions} />
-        <Route path="/view-auction" Component={ViewAuction} />
+        <Route path="/" Component={Homepage} />
+        <Route path="/create-room" Component={CreatePost} />
+        <Route path="/room/:id" Component={SingleRoom} />
       </Routes>
-      {/* create auction  */}
-      {/* my auctions  */}
-      {/* view auction */}
+      <Toaster />
     </>
   );
 };

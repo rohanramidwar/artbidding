@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBids, joinRoom, placeBid } from "@/actions/roomActions";
 import { io } from "socket.io-client";
-import { ADD_BID } from "@/constants/actionTypes";
+import { UPDATE_BIDS } from "@/constants/actionTypes";
 
 const ENDPOINT = "http://localhost:5000";
 
@@ -13,12 +13,10 @@ const SingleRoom = () => {
   const dispatch = useDispatch();
   const socketRef = useRef();
 
-  // const [socketConnected, setSocketConnected] = useState(false);
-
+  const { isSignedIn, userId } = useAuth();
   const { isLoading, selectedRoom, allBids } = useSelector(
     (state) => state?.rooms
   );
-  const { isSignedIn, userId } = useAuth();
 
   const registerToBid = () => {
     const roomId = selectedRoom?._id;
@@ -29,7 +27,7 @@ const SingleRoom = () => {
     }
   };
 
-  const submitBid = () => {
+  const sendBid = () => {
     const room = selectedRoom?._id;
     const bid = selectedRoom?.currentBid?.bid
       ? selectedRoom?.currentBid?.bid + 1
@@ -63,17 +61,18 @@ const SingleRoom = () => {
 
   useEffect(() => {
     if (isSignedIn && socketRef.current) {
-      const handleBidReceived = (newBidReceived) => {
-        if (selectedRoom?._id !== newBidReceived.room._id) {
+      const handleBid = (newBid) => {
+        if (selectedRoom?._id !== newBid.room._id) {
+          //notify
         } else {
-          dispatch({ type: ADD_BID, payload: newBidReceived });
+          dispatch({ type: UPDATE_BIDS, payload: newBid });
         }
       };
 
-      socketRef.current.on("bid received", handleBidReceived);
+      socketRef.current.on("bid received", handleBid);
 
       return () => {
-        socketRef.current.off("bid received", handleBidReceived);
+        socketRef.current.off("bid received", handleBid);
       };
     }
   }, [isSignedIn, selectedRoom, dispatch]);
@@ -99,7 +98,7 @@ const SingleRoom = () => {
           {selectedRoom?.bidders.find(
             (bidder) => bidder.clerkUserId === userId
           ) ? (
-            <Button onClick={submitBid} disabled={isLoading}>
+            <Button onClick={sendBid} disabled={isLoading}>
               {isLoading ? "Placing.." : "Place bid"}
             </Button>
           ) : (

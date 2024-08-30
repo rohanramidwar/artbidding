@@ -11,7 +11,7 @@ const Homepage = () => {
     dispatch(getAllRooms());
   }, [dispatch]);
 
-  const { isLoading, rooms } = useSelector((state) => state?.rooms);
+  const { rooms } = useSelector((state) => state?.rooms);
 
   return (
     <div className="text-slate-800 p-6">
