@@ -8,6 +8,7 @@ import { createPost } from "@/actions/roomActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { format } from "date-fns";
 
 const CreatePost = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,8 @@ const CreatePost = () => {
   const submitPost = (e) => {
     e.preventDefault();
 
+    const formattedDateTime = date ? format(date, "yyyy-MM-dd HH:mm:ss") : null;
+
     if (isSignedIn) {
       dispatch(
         createPost(
@@ -50,7 +53,7 @@ const CreatePost = () => {
             roomName,
             itemPic,
             openingBid,
-            endsOn: date,
+            endsOn: formattedDateTime,
             clerkUserId: userId,
           },
           navigate
