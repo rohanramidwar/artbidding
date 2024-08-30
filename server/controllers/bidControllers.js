@@ -26,7 +26,7 @@ export const placeBid = async (req, res) => {
     let updatedRoom = await Room.findByIdAndUpdate(room, { currentBid: bade });
 
     updatedRoom = await Room.findById(room)
-      .populate("currentBid", "bid")
+      .populate("currentBid", "bid bidder")
       .populate("roomAdmin", "firstName lastName profilePic")
       .populate("bidders", "clerkUserId firstName lastName profilePic");
 
