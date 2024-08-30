@@ -19,7 +19,7 @@ const RoomCard = ({ room }) => {
     <div
       role="button"
       onClick={singleRoom}
-      className="p-3 bg-zinc-100 border border-zinc-200 rounded-md"
+      className="p-3 bg-zinc-100 border border-zinc-200 rounded-md hover:shadow-md"
     >
       <div className="overflow-clip max-h-40">
         <img className="" src={room.itemPic} alt="item-pic" />
