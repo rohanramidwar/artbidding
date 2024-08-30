@@ -99,49 +99,60 @@ const SingleRoom = () => {
   }, [isSignedIn, selectedRoom, dispatch]);
 
   return (
-    <div className="flex justify-between p-6 text-slate-800 w-full">
-      {/* left  */}
-      <div className="w-1/3">
-        <p className="text-4xl py-6">{selectedRoom?.roomName}</p>
-        <p>
-          Current bid: &#36;
-          {selectedRoom?.currentBid ? selectedRoom?.currentBid?.bid : 0}
-        </p>
-        <p>Opening bid: &#36;{selectedRoom?.openingBid}</p>
-        <p>Ends on: {selectedRoom?.endsOn}</p>
-        <img className="py-6" src={selectedRoom?.itemPic} alt="item-pic" />
-      </div>
+    <div className="flex justify-center">
+      <div className="w-3/4 flex gap-12 justify-between py-12 text-slate-800">
+        {/* left  */}
+        <div className="w-1/2">
+          <p className="text-4xl pb-6">{selectedRoom?.roomName}</p>
+          <p>
+            Current bid:{" "}
+            <span className="text-lg">
+              &#36;
+              {selectedRoom?.currentBid
+                ? selectedRoom?.currentBid?.bid
+                : 0}{" "}
+            </span>
+          </p>
+          <p>Opening bid: &#36;{selectedRoom?.openingBid}</p>
+          <p>Ends on: {selectedRoom?.endsOn}</p>
+          <img
+            className="py-6 w-full"
+            src={selectedRoom?.itemPic}
+            alt="item-pic"
+          />
+        </div>
 
-      {/* right */}
-      <div className="flex flex-col w-1/3">
-        <div className="py-6 flex justify-between items-center">
-          <p className="text-2xl">All bids</p>
-          {selectedRoom?.bidders.find(
-            (bidder) => bidder.clerkUserId === userId
-          ) ? (
-            <Button onClick={sendBid} disabled={isLoading}>
-              {isLoading ? "Placing.." : "Place bid"}
-            </Button>
-          ) : (
-            <Button onClick={registerToBid} disabled={isLoading}>
-              {isLoading ? "Registering.." : "Register to bid"}
-            </Button>
-          )}
+        {/* right */}
+        <div className="flex flex-col w-1/2">
+          <div className="pb-6 flex justify-between items-center">
+            <p className="text-2xl">Recent bids</p>
+            {selectedRoom?.bidders.find(
+              (bidder) => bidder.clerkUserId === userId
+            ) ? (
+              <Button onClick={sendBid} disabled={isLoading}>
+                {isLoading ? "Placing.." : "Place bid"}
+              </Button>
+            ) : (
+              <Button onClick={registerToBid} disabled={isLoading}>
+                {isLoading ? "Registering.." : "Register to bid"}
+              </Button>
+            )}
+          </div>
+          <div className="flex flex-col gap-6 bg-zinc-100 rounded-md p-6">
+            {!allBids.length && "No bids yet"}
+            {allBids?.map((bid) => (
+              <div key={bid?._id}>
+                <p>
+                  <span>
+                    {bid?.bidder?.firstName} {bid?.bidder?.lastName}
+                  </span>{" "}
+                  outbid with <span className="text-xl ">&#36;{bid?.bid}</span>
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-6">
-          {!allBids.length && "No bids yet"}
-          {allBids?.map((bid) => (
-            <div key={bid?._id}>
-              <p>
-                <span>
-                  {bid?.bidder?.firstName} {bid?.bidder?.lastName}
-                </span>{" "}
-                outbid with <span className="text-xl ">&#36;{bid?.bid}</span>
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+      </div>{" "}
     </div>
   );
 };
