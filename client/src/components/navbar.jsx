@@ -14,12 +14,11 @@ const Navbar = () => {
       <Link to="/">
         <div>Bidding-Wars</div>
       </Link>
-      <div>
+
+      <div className="flex gap-6">
         <Link to="/create-room">
           <Button variant="outline">Create auction</Button>
         </Link>
-      </div>
-      <div>
         <SignedOut>
           <SignInButton />
         </SignedOut>
