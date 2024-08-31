@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/clerk-react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBids, joinRoom, placeBid } from "@/actions/roomActions";
 import { io } from "socket.io-client";
 import { FETCH_ROOM, UPDATE_BIDS } from "@/constants/actionTypes";
+import moment from "moment";
 
 const ENDPOINT = "http://localhost:5000";
 
@@ -17,6 +18,12 @@ const SingleRoom = () => {
   const { isLoading, selectedRoom, allBids } = useSelector(
     (state) => state?.rooms
   );
+
+  const isAuctionEnded = useMemo(() => {
+    if (!selectedRoom?.endsOn) return false;
+    const endDate = new Date(selectedRoom.endsOn.replace(" ", "T"));
+    return endDate <= new Date();
+  }, [selectedRoom?.endsOn]);
 
   const registerToBid = () => {
     const roomId = selectedRoom?._id;
@@ -115,6 +122,35 @@ const SingleRoom = () => {
           </p>
           <p>Opening bid: &#36;{selectedRoom?.openingBid}</p>
           <p>Ends on: {selectedRoom?.endsOn}</p>
+
+          {isAuctionEnded ? (
+            selectedRoom?.currentBid?.bidder?.clerkUserId === userId ? (
+              <div className="pt-3">
+                <p className="pb-1 text-lg">
+                  Congratulations! You are the winner!
+                </p>
+                <Button className="bg-blue-600 hover:bg-blue-500">
+                  Claim item
+                </Button>
+              </div>
+            ) : selectedRoom?.currentBid?.bidder ? (
+              <p className="pt-3">
+                Sold to{" "}
+                <span className="text-lg text-blue-600">
+                  {selectedRoom.currentBid.bidder.firstName}{" "}
+                  {selectedRoom.currentBid.bidder.lastName}{" "}
+                </span>{" "}
+                🎉 for{" "}
+                <span className="text-lg text-green-600">
+                  &#36;
+                  {selectedRoom?.currentBid?.bid}
+                </span>
+              </p>
+            ) : (
+              <p className="pt-3 text-red-600">Sold to no one</p>
+            )
+          ) : null}
+
           <img
             className="py-6 w-full"
             src={selectedRoom?.itemPic}
@@ -126,28 +162,42 @@ const SingleRoom = () => {
         <div className="flex flex-col sm:w-1/2">
           <div className="pb-6 flex justify-between items-center">
             <p className="text-2xl">Recent bids</p>
-            {selectedRoom?.bidders.find(
-              (bidder) => bidder.clerkUserId === userId
-            ) ? (
-              <Button onClick={sendBid} disabled={isLoading}>
-                {isLoading ? "Placing.." : "Place bid"}
-              </Button>
-            ) : (
-              <Button onClick={registerToBid} disabled={isLoading}>
-                {isLoading ? "Registering.." : "Register to bid"}
-              </Button>
+            {isAuctionEnded && (
+              <p className="text-red-600">Auction has ended!</p>
             )}
+            {!isAuctionEnded &&
+              (selectedRoom?.bidders.find(
+                (bidder) => bidder.clerkUserId === userId
+              ) ? (
+                <Button onClick={sendBid} disabled={isLoading}>
+                  {isLoading ? "Placing.." : "Place bid"}
+                </Button>
+              ) : (
+                <Button onClick={registerToBid} disabled={isLoading}>
+                  {isLoading ? "Registering.." : "Register to bid"}
+                </Button>
+              ))}
           </div>
           <div className="flex flex-col gap-6 bg-zinc-100 rounded-md p-6">
-            {!allBids.length && "No bids yet"}
+            {!allBids.length && "No bids yet 🐣"}
             {allBids?.map((bid) => (
-              <div key={bid?._id}>
+              <div className="flex gap-2 items-center" key={bid?._id}>
+                <img
+                  className="w-5 h-5 rounded-full"
+                  src={bid?.bidder?.profilePic}
+                  alt="profile-pic"
+                />
                 <p>
-                  <span>
+                  <span className="text-lg">
                     {bid?.bidder?.firstName} {bid?.bidder?.lastName}
                   </span>{" "}
-                  outbid with <span className="text-xl ">&#36;{bid?.bid}</span>
+                  outbid with <span className="text-lg ">&#36;{bid?.bid}</span>{" "}
                 </p>
+                &#xb7;
+                <span className="text-sm text-slate-600">
+                  {" "}
+                  {moment(bid?.createdAt).fromNow()}
+                </span>
               </div>
             ))}
           </div>
