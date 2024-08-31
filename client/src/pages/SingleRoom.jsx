@@ -7,6 +7,7 @@ import { getAllBids, joinRoom, placeBid } from "@/actions/roomActions";
 import { io } from "socket.io-client";
 import { FETCH_ROOM, UPDATE_BIDS } from "@/constants/actionTypes";
 import moment from "moment";
+import ConfettiEffect from "@/components/ConfettiEffect";
 
 const ENDPOINT = "http://localhost:5000";
 
@@ -126,6 +127,7 @@ const SingleRoom = () => {
           {isAuctionEnded ? (
             selectedRoom?.currentBid?.bidder?.clerkUserId === userId ? (
               <div className="pt-3">
+                <ConfettiEffect />
                 <p className="pb-1 text-lg">
                   Congratulations! You are the winner!
                 </p>
