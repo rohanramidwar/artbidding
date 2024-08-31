@@ -8,6 +8,7 @@ import { io } from "socket.io-client";
 import { FETCH_ROOM, UPDATE_BIDS } from "@/constants/actionTypes";
 import moment from "moment";
 import ConfettiEffect from "@/components/ConfettiEffect";
+import { loadStripe } from "@stripe/stripe-js";
 
 const ENDPOINT = "http://localhost:5000";
 
@@ -106,6 +107,37 @@ const SingleRoom = () => {
     }
   }, [isSignedIn, selectedRoom, dispatch]);
 
+  const makePayment = async () => {
+    const stripe = await loadStripe(process.env.STRIPE_PUBLISHABE_KEY);
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const response = await fetch(
+      "http://localhost:5000/api/create-checkout-session",
+      {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+          itemName: selectedRoom?.roomName,
+          itemPic: selectedRoom?.itemPic,
+          amount: selectedRoom?.currentBid?.bid,
+        }),
+      }
+    );
+
+    const session = await response.json();
+
+    const result = stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      console.log(result.error);
+    }
+  };
+
   return (
     <div className="flex justify-center">
       <div className="px-6 sm:w-3/4 flex sm:flex-row flex-col gap-12 sm:justify-between py-12 text-slate-800">
@@ -131,7 +163,10 @@ const SingleRoom = () => {
                 <p className="pb-1 text-lg">
                   Congratulations! You are the winner!
                 </p>
-                <Button className="bg-blue-600 hover:bg-blue-500">
+                <Button
+                  onClick={makePayment}
+                  className="bg-blue-600 hover:bg-blue-500"
+                >
                   Claim item
                 </Button>
               </div>
@@ -149,7 +184,7 @@ const SingleRoom = () => {
                 </span>
               </p>
             ) : (
-              <p className="pt-3 text-red-600">Sold to no one</p>
+              <p className="pt-3 text-red-600">Sold to no one!</p>
             )
           ) : null}
 

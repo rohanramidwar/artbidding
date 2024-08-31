@@ -10,6 +10,7 @@ import User from "./models/userModel.js";
 import mongoose from "mongoose";
 import bidRoutes from "./routes/bidRoutes.js";
 import { Server } from "socket.io";
+import Stripe from "stripe";
 
 const app = express();
 
@@ -86,6 +87,35 @@ const server = app.listen(PORT, () => {
   console.log(`Server Started on PORT: ${PORT}`.yellow);
 });
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// checkout api
+app.post("/api/create-checkout-session", async (req, res) => {
+  const { itemName, itemPic, amount } = req.body;
+
+  const lineItem = {
+    price_data: {
+      currency: "usd",
+      product_data: {
+        name: itemName,
+        images: [itemPic],
+      },
+      unit_amount: amount * 100,
+    },
+    quantity: 1,
+  };
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [lineItem],
+    mode: "payment",
+    success_url: "http://localhost:5173/sucess",
+    cancel_url: "http://localhost:5173/cancel",
+  });
+
+  res.json({ id: session.id });
+});
+
 const io = new Server(server, {
   pingTimeout: 60000, // amount of time it will wait while being inactive
   cors: {
@@ -95,16 +125,16 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   //personal room
-  console.log("Connected to socket.io");
+  // console.log("Connected to socket.io");
   socket.on("setup", (clerkUserId) => {
     socket.join(clerkUserId);
     socket.emit("connected");
-    console.log("User: " + clerkUserId);
+    // console.log("User: " + clerkUserId);
   });
 
   socket.on("join room", (room) => {
     socket.join(room);
-    console.log("User Joined Room: " + room);
+    // console.log("User Joined Room: " + room);
   });
 
   socket.on("new bid", (newBidReceived) => {
