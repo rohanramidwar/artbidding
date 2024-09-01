@@ -38,7 +38,7 @@ export const joinRoom = async (req, res) => {
 
     added = await Room.findById(roomId)
       .populate("currentBid", "bid")
-      .populate("roomAdmin", "firstName lastName profilePic")
+      .populate("roomAdmin", "firstName lastName profilePic clerkUserId")
       .populate("bidders", "clerkUserId firstName lastName profilePic");
 
     res.status(201).json(added);
@@ -65,7 +65,7 @@ export const fetchRoom = async (req, res) => {
   try {
     let room = await Room.findById(roomId)
       .populate("currentBid", "bid bidder")
-      .populate("roomAdmin", "firstName lastName profilePic")
+      .populate("roomAdmin", "firstName lastName profilePic clerkUserId")
       .populate("bidders", "clerkUserId firstName lastName profilePic");
 
     room = await User.populate(room, {

@@ -16,6 +16,7 @@ const roomSchema = new mongoose.Schema(
     },
     openingBid: Number,
     endsOn: String,
+    claimed: { type: Boolean, default: false },
     roomAdmin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
