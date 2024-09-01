@@ -12,6 +12,7 @@ import {
   PLACE_BID,
   FETCH_ALL_BIDS,
   UPDATE_BIDS,
+  FETCH_ORDERS,
 } from "../constants/actionTypes.js";
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
   rooms: [],
   allBids: [],
   isLoading: false,
+  myOrders: [],
 };
 
 const rooms = (state = initialState, action) => {
@@ -51,6 +53,9 @@ const rooms = (state = initialState, action) => {
 
     case FETCH_ALL_BIDS:
       return { ...state, allBids: payload };
+
+    case FETCH_ORDERS:
+      return { ...state, myOrders: payload };
 
     default:
       return state;

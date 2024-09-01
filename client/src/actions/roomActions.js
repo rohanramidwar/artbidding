@@ -9,6 +9,7 @@ import {
   JOIN_ROOM,
   PLACE_BID,
   FETCH_ALL_BIDS,
+  FETCH_ORDERS,
 } from "@/constants/actionTypes";
 
 export const createPost = (newPost, navigate) => async (dispatch) => {
@@ -128,6 +129,26 @@ export const getAllRooms = () => async (dispatch) => {
     console.log(err);
 
     toast.error("Error fetching rooms");
+
+    dispatch({ type: END_LOADING });
+  }
+};
+
+export const getOrders = (userId, navigate) => async (dispatch) => {
+  try {
+    dispatch({ type: START_LOADING });
+
+    const { data } = await api.fetchOrders(userId);
+
+    dispatch({ type: FETCH_ORDERS, payload: data }); //sends to reducer
+
+    dispatch({ type: END_LOADING });
+
+    navigate("/my-orders");
+  } catch (err) {
+    console.log(err);
+
+    toast.error("Error fetching orders");
 
     dispatch({ type: END_LOADING });
   }
