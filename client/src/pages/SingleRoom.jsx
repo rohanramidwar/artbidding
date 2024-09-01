@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/clerk-react";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBids, joinRoom, placeBid } from "@/actions/roomActions";
 import { io } from "socket.io-client";
 import { FETCH_ROOM, UPDATE_BIDS } from "@/constants/actionTypes";
 import moment from "moment";
-import ConfettiEffect from "@/components/ConfettiEffect";
+// import ConfettiEffect from "@/components/ConfettiEffect";
 import { loadStripe } from "@stripe/stripe-js";
 
 const ENDPOINT = "http://localhost:5000";
@@ -15,6 +15,7 @@ const ENDPOINT = "http://localhost:5000";
 const SingleRoom = () => {
   const dispatch = useDispatch();
   const socketRef = useRef(); //current socket
+  const [inProcess, setInProcess] = useState(false);
 
   const { isSignedIn, userId } = useAuth();
   const { isLoading, selectedRoom, allBids } = useSelector(
@@ -108,21 +109,26 @@ const SingleRoom = () => {
   }, [isSignedIn, selectedRoom, dispatch]);
 
   const makePayment = async () => {
-    const stripe = await loadStripe(process.env.STRIPE_PUBLISHABE_KEY);
+    setInProcess(true);
+    const stripe = await loadStripe(
+      "pk_test_51Ptrd0Kr2vWG4UII1jNdHmT0zC28evCW85B5vtvbVuP6zWretaX4Aq8cz8Qt4dUeVN6Bcy6J2USlOlfJMIVqwxBS00ytRUAzR0"
+    );
 
     const headers = {
       "Content-Type": "application/json",
     };
 
     const response = await fetch(
-      "http://localhost:5000/api/create-checkout-session",
+      "http://localhost:5000/api/stripe/create-checkout-session",
       {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
-          itemName: selectedRoom?.roomName,
-          itemPic: selectedRoom?.itemPic,
+          roomId: selectedRoom?._id,
+          name: selectedRoom?.roomName,
+          pic: selectedRoom?.itemPic,
           amount: selectedRoom?.currentBid?.bid,
+          userId: userId,
         }),
       }
     );
@@ -133,8 +139,11 @@ const SingleRoom = () => {
       sessionId: session.id,
     });
 
+    setInProcess(false);
+
     if (result.error) {
       console.log(result.error);
+      setInProcess(false);
     }
   };
 
@@ -159,16 +168,27 @@ const SingleRoom = () => {
           {isAuctionEnded ? (
             selectedRoom?.currentBid?.bidder?.clerkUserId === userId ? (
               <div className="pt-3">
-                <ConfettiEffect />
+                {/* <ConfettiEffect /> */}
                 <p className="pb-1 text-lg">
-                  Congratulations! You are the winner!
+                  Congratulations!🎉 You are the winner!
                 </p>
-                <Button
-                  onClick={makePayment}
-                  className="bg-blue-600 hover:bg-blue-500"
-                >
-                  Claim item
-                </Button>
+                {selectedRoom?.claimed ? (
+                  <>
+                    <Button disabled={true}>Claimed</Button>
+                    <p className="pt-2 text-blue-600">
+                      Check order status in{" "}
+                      <span className="text-lg">my orders</span>
+                    </p>
+                  </>
+                ) : (
+                  <Button
+                    onClick={makePayment}
+                    disabled={inProcess}
+                    className="bg-blue-600 hover:bg-blue-500"
+                  >
+                    {inProcess ? "Claiming.." : "Claim item"}
+                  </Button>
+                )}
               </div>
             ) : selectedRoom?.currentBid?.bidder ? (
               <p className="pt-3">
