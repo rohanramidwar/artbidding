@@ -6,6 +6,12 @@ const userSchema = new mongoose.Schema(
     firstName: String,
     lastName: String,
     profilePic: String,
+    orders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   { timestamps: true }
 );
