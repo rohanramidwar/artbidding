@@ -36,7 +36,7 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <div className="flex gap-6">
+      <div className="flex gap-3 sm:gap-6">
         {isSignedIn && (
           <Button onClick={showMyOrders} variant="outline">
             My orders
