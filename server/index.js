@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://bidding-wars.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -102,7 +102,7 @@ const server = app.listen(PORT, () => {
 const io = new Server(server, {
   pingTimeout: 60000, // amount of time it will wait while being inactive
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://bidding-wars.vercel.app",
   },
 });
 
