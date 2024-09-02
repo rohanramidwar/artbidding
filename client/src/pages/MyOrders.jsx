@@ -7,7 +7,7 @@ const MyOrders = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="w-full lg:w-1/2 text-slate-800 p-6">
+      <div className="w-full lg:w-1/2 text-slate-800 p-6 pb-12">
         <p className="text-2xl my-6">My orders</p>
         {!myOrders.length ? (
           <div className="bg-zinc-100 p-6 rounded-md">No orders yet 🐣</div>

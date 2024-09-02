@@ -31,15 +31,17 @@ const Navbar = () => {
     <nav className="flex justify-between py-2 px-6 bg-zinc-100 shadow items-center text-slate-800">
       <Link to="/">
         <div className="flex items-center gap-2">
-          <img className="w-5 h-5" src={bidLogo} alt="b" />
+          <img className="w-8 h-8" src={bidLogo} alt="b" />
           <p className="hidden sm:block font-medium">BiddingWars</p>
         </div>
       </Link>
 
       <div className="flex gap-6">
-        <Button onClick={showMyOrders} variant="outline">
-          My orders
-        </Button>
+        {isSignedIn && (
+          <Button onClick={showMyOrders} variant="outline">
+            My orders
+          </Button>
+        )}
 
         <Link to="/create-room">
           <Button variant="outline">Create auction</Button>

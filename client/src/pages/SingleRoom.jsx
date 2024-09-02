@@ -216,7 +216,7 @@ const SingleRoom = () => {
         </div>
 
         {/* right */}
-        <div className="flex flex-col sm:w-1/2">
+        <div className="flex flex-col sm:pb-0 pb-12 sm:w-1/2">
           <div className="pb-6 flex justify-between items-center">
             <p className="text-2xl">Recent bids</p>
             {isAuctionEnded && (
