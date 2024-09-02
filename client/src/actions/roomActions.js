@@ -36,6 +36,8 @@ export const getRoom = (roomId, navigate) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
 
+    toast("Please wait while fetching orders");
+
     const { data } = await api.fetchRoom(roomId);
 
     dispatch({ type: FETCH_ROOM, payload: data }); //sends to reducer
@@ -137,6 +139,8 @@ export const getAllRooms = () => async (dispatch) => {
 export const getOrders = (userId, navigate) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
+
+    toast("Please wait while fetching orders");
 
     const { data } = await api.fetchOrders(userId);
 
