@@ -10,7 +10,7 @@ import moment from "moment";
 // import ConfettiEffect from "@/components/ConfettiEffect";
 import { loadStripe } from "@stripe/stripe-js";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://bidding-wars-backend.vercel.app";
 
 const SingleRoom = () => {
   const dispatch = useDispatch();
@@ -119,7 +119,7 @@ const SingleRoom = () => {
     };
 
     const response = await fetch(
-      "http://localhost:5000/api/stripe/create-checkout-session",
+      "https://bidding-wars-backend.vercel.app/api/stripe/create-checkout-session",
       {
         method: "POST",
         headers: headers,
