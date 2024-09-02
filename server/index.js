@@ -15,6 +15,14 @@ import { Server } from "socket.io";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "https://bidding-wars.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 //enable us to send post req
 app.use(
   bodyParser.json({
@@ -25,14 +33,6 @@ app.use(
 );
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-
-app.use(
-  cors({
-    origin: "https://bidding-wars.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
 
 app.use("/api/stripe", stripeRoutes);
 
