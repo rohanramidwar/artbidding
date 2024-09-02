@@ -103,6 +103,8 @@ const io = new Server(server, {
   pingTimeout: 60000, // amount of time it will wait while being inactive
   cors: {
     origin: "https://bidding-wars.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   },
 });
 
