@@ -16,11 +16,11 @@ const App = () => {
       <Navbar />
       <ScrollToTop />
       <Routes>
-        <Route path="/" Component={Homepage} />
+        <Route path="/" Component={CancelPage} />
         <Route path="/my-orders" Component={MyOrders} />
         <Route path="/create-room" Component={CreatePost} />
         <Route path="/room/:id" Component={SingleRoom} />
-        <Route path="/cancel" Component={CancelPage} />
+        {/* <Route path="/cancel" Component={CancelPage} /> */}
         <Route path="/success" Component={OrderSuccessPage} />
       </Routes>
       <Toaster />
