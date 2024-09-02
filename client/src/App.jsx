@@ -9,7 +9,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import MyOrders from "./pages/MyOrders";
 import CancelPage from "./pages/CancelPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
-import TempCancel from "./pages/TempCancel";
 
 const App = () => {
   return (
@@ -21,7 +20,7 @@ const App = () => {
         <Route path="/my-orders" Component={MyOrders} />
         <Route path="/create-room" Component={CreatePost} />
         <Route path="/room/:id" Component={SingleRoom} />
-        <Route path="/cancel" Component={TempCancel} />
+        <Route path="/cancel" Component={CancelPage} />
         <Route path="/success" Component={OrderSuccessPage} />
       </Routes>
       <Toaster />
