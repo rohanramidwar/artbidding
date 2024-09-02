@@ -9,12 +9,20 @@ import bodyParser from "body-parser";
 import User from "./models/userModel.js";
 import mongoose from "mongoose";
 import bidRoutes from "./routes/bidRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import stripeRoutes from "./routes/stripeRoutes.js";
 import { Server } from "socket.io";
-import Stripe from "stripe";
 
 const app = express();
 
 //enable us to send post req
+app.use(
+  bodyParser.json({
+    verify: function (req, res, buf) {
+      req.rawBody = buf;
+    },
+  })
+);
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
@@ -26,11 +34,15 @@ app.use(
   })
 );
 
+app.use("/api/stripe", stripeRoutes);
+
 app.use(express.json());
 
 app.use("/api/room", roomRoutes);
 
 app.use("/api/bid", bidRoutes);
+
+app.use("/api/orders", orderRoutes);
 
 config();
 
@@ -85,35 +97,6 @@ const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
   console.log(`Server Started on PORT: ${PORT}`.yellow);
-});
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-// checkout api
-app.post("/api/create-checkout-session", async (req, res) => {
-  const { itemName, itemPic, amount } = req.body;
-
-  const lineItem = {
-    price_data: {
-      currency: "usd",
-      product_data: {
-        name: itemName,
-        images: [itemPic],
-      },
-      unit_amount: amount * 100,
-    },
-    quantity: 1,
-  };
-
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [lineItem],
-    mode: "payment",
-    success_url: "http://localhost:5173/sucess",
-    cancel_url: "http://localhost:5173/cancel",
-  });
-
-  res.json({ id: session.id });
 });
 
 const io = new Server(server, {

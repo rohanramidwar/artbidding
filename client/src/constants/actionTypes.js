@@ -7,3 +7,4 @@ export const CREATE_POST = "CREATE_POST";
 export const PLACE_BID = "PLACE_BID";
 export const UPDATE_BIDS = "UPDATE_BID";
 export const FETCH_ALL_BIDS = "FETCH_ALL_BIDS";
+export const FETCH_ORDERS = "FETCH_ORDERS";

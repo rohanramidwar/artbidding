@@ -12,3 +12,5 @@ export const fetchRoom = (roomId) => API.get(`/api/room/${roomId}`);
 export const joinRoom = (idz) => API.put("/api/room/join", idz);
 export const placeBid = (newBid) => API.post("/api/bid", newBid);
 export const fetchAllBids = (roomId) => API.get(`/api/bid/${roomId}`);
+export const fetchOrders = (clerkUserId) =>
+  API.get(`/api/orders/${clerkUserId}`);

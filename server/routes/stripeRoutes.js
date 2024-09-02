@@ -39,53 +39,32 @@ router.post("/create-checkout-session", async (req, res) => {
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    // shipping_address_collection: {
-    //   allowed_countries: ["US", "IN"],
-    // },
-    // shipping_options: [
-    //   {
-    //     shipping_rate_data: {
-    //       type: "fixed_amount",
-    //       fixed_amount: {
-    //         amount: 0,
-    //         currency: "usd",
-    //       },
-    //       display_name: "Free shipping",
+    shipping_address_collection: {
+      allowed_countries: ["US", "IN"],
+    },
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          type: "fixed_amount",
+          fixed_amount: {
+            amount: 0,
+            currency: "usd",
+          },
+          display_name: "Free shipping",
 
-    //       delivery_estimate: {
-    //         minimum: {
-    //           unit: "business_day",
-    //           value: 5,
-    //         },
-    //         maximum: {
-    //           unit: "business_day",
-    //           value: 7,
-    //         },
-    //       },
-    //     },
-    //   },
-    //   {
-    //     shipping_rate_data: {
-    //       type: "fixed_amount",
-    //       fixed_amount: {
-    //         amount: 1500,
-    //         currency: "usd",
-    //       },
-    //       display_name: "Next day air",
-
-    //       delivery_estimate: {
-    //         minimum: {
-    //           unit: "business_day",
-    //           value: 1,
-    //         },
-    //         maximum: {
-    //           unit: "business_day",
-    //           value: 1,
-    //         },
-    //       },
-    //     },
-    //   },
-    // ],
+          delivery_estimate: {
+            minimum: {
+              unit: "business_day",
+              value: 5,
+            },
+            maximum: {
+              unit: "business_day",
+              value: 7,
+            },
+          },
+        },
+      },
+    ],
     // phone_number_collection: {
     //   enabled: true,
     // },
@@ -99,7 +78,7 @@ router.post("/create-checkout-session", async (req, res) => {
   res.json({ id: session.id });
 });
 
-const createOrder = async (customer) => {
+const createOrder = async (customer, data) => {
   const item = JSON.parse(customer.metadata.cart);
   const clerkUserId = customer.metadata.userId;
 
@@ -110,6 +89,7 @@ const createOrder = async (customer) => {
     name: item.name,
     pic: item.pic,
     amount: item.amount,
+    address: data.customer_details.address,
   });
 
   await User.findByIdAndUpdate(
@@ -169,7 +149,7 @@ router.post(
         .retrieve(data.customer)
         .then(async (customer) => {
           try {
-            createOrder(customer);
+            createOrder(customer, data);
           } catch (err) {
             console.log(err);
           }

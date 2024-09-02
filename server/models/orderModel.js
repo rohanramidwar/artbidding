@@ -9,6 +9,7 @@ const orderSchema = new mongoose.Schema(
     name: String,
     pic: String,
     amount: Number,
+    address: { type: Object },
   },
   { timestamps: true }
 );
