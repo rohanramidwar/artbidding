@@ -1,7 +1,7 @@
 import React from "react";
 import Homepage from "./pages/Homepage";
 import { Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar";
 import CreatePost from "./components/CreatePost";
 import { Toaster } from "react-hot-toast";
 import SingleRoom from "./pages/SingleRoom";
