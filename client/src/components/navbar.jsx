@@ -28,7 +28,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex justify-between py-2 px-6 bg-zinc-100 shadow items-center text-slate-800">
+    <nav className="flex justify-between py-2 px-3 sm:px-6 bg-zinc-100 shadow items-center text-slate-800">
       <Link to="/">
         <div className="flex items-center gap-2">
           <img className="w-8 h-8" src={bidLogo} alt="b" />
