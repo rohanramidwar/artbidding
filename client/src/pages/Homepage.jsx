@@ -28,7 +28,7 @@ const Homepage = () => {
   );
 
   return (
-    <div className="text-slate-800 p-6">
+    <div className="text-slate-800 p-6 pt-12">
       <p className="text-2xl">Live auctions</p>
       <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 py-6">
         {!liveRooms.length && "No live auctions found 🐣"}
