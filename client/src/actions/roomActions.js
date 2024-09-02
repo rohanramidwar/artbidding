@@ -36,7 +36,7 @@ export const getRoom = (roomId, navigate) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
 
-    toast("Please wait while fetching orders");
+    toast("Please wait while fetching room");
 
     const { data } = await api.fetchRoom(roomId);
 
