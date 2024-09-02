@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 import SingleRoom from "./pages/SingleRoom";
 import ScrollToTop from "./components/ScrollToTop";
 import MyOrders from "./pages/MyOrders";
-import CancelPage from "./pages/Cancelpage";
+import CancelPage from "./pages/CancelPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 
 const App = () => {
