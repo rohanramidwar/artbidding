@@ -34,23 +34,19 @@ export const createPost = (newPost, navigate) => async (dispatch) => {
 
 export const getRoom = (roomId, navigate) => async (dispatch) => {
   try {
-    dispatch({ type: START_LOADING });
-
-    toast("Please wait while fetching room");
+    const toastId = toast("⏳ Fetching room...");
 
     const { data } = await api.fetchRoom(roomId);
 
     dispatch({ type: FETCH_ROOM, payload: data }); //sends to reducer
 
-    dispatch({ type: END_LOADING });
+    toast.dismiss(toastId);
 
     navigate(`/room/${roomId}`);
   } catch (err) {
     console.log(err);
 
     toast.error("Error fetching room");
-
-    dispatch({ type: END_LOADING });
   }
 };
 
@@ -100,13 +96,9 @@ export const placeBid = (bidData, socket) => async (dispatch) => {
 
 export const getAllBids = (roomId, socket) => async (dispatch) => {
   try {
-    dispatch({ type: START_LOADING });
-
     const { data } = await api.fetchAllBids(roomId);
 
     dispatch({ type: FETCH_ALL_BIDS, payload: data }); //sends to reducer
-
-    dispatch({ type: END_LOADING });
 
     socket.emit("join room", roomId);
   } catch (err) {
@@ -138,15 +130,13 @@ export const getAllRooms = () => async (dispatch) => {
 
 export const getOrders = (userId, navigate) => async (dispatch) => {
   try {
-    dispatch({ type: START_LOADING });
-
-    toast("Please wait while fetching orders");
+    const toastId = toast("⏳ Fetching orders...");
 
     const { data } = await api.fetchOrders(userId);
 
     dispatch({ type: FETCH_ORDERS, payload: data }); //sends to reducer
 
-    dispatch({ type: END_LOADING });
+    toast.dismiss(toastId);
 
     navigate("/my-orders");
   } catch (err) {
