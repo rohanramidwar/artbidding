@@ -1,2 +1,1 @@
-# artbidding
-# artbidding
+# bidding-wars
