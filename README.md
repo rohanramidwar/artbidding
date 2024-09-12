@@ -1,1 +1,1 @@
-# bidding-wars
+# a realtime bidding website
