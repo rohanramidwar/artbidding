@@ -6,7 +6,7 @@ import CreatePost from "./components/CreatePost";
 import { Toaster } from "react-hot-toast";
 import SingleRoom from "./pages/SingleRoom";
 import ScrollToTop from "./components/ScrollToTop";
-import MyOrders from "./pages/MyOrders";
+// import MyOrders from "./pages/MyOrders";
 import CancelPage from "./pages/CancelPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 
@@ -17,7 +17,7 @@ const App = () => {
       <ScrollToTop />
       <Routes>
         <Route path="/" Component={Homepage} />
-        <Route path="/my-orders" Component={MyOrders} />
+        {/* <Route path="/my-orders" Component={MyOrders} /> */}
         <Route path="/create-room" Component={CreatePost} />
         <Route path="/room/:id" Component={SingleRoom} />
         <Route path="/cancel" Component={CancelPage} />
