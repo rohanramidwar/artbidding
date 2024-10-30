@@ -20,19 +20,21 @@ const Navbar = () => {
   const { isSignedIn, userId } = useAuth();
 
   const showMyOrders = () => {
-    if (isSignedIn) {
-      dispatch(getOrders(userId, navigate));
-    } else {
-      toast.error("Please sign in first");
-    }
+    // if (isSignedIn) {
+    //   dispatch(getOrders(userId, navigate));
+    // } else {
+    // }
+    toast("Feature coming soon..");
   };
 
   return (
-    <nav className="flex justify-between py-2 px-3 sm:px-6 bg-zinc-100 shadow items-center text-slate-800">
+    <nav className="flex justify-between py-2 px-5 sm:px-14 bg-zinc-100 shadow items-center text-slate-800">
       <Link to="/">
         <div className="flex items-center gap-2">
-          <img className="w-8 h-8" src={bidLogo} alt="b" />
-          <p className="hidden sm:block font-medium">BiddingWars</p>
+          <img className="sm:hidden block w-8 h-8" src={bidLogo} alt="b" />
+          <p className="hidden sm:block text-4xl case">
+            BIDDING<span className="text-gray-500">WARS</span>
+          </p>
         </div>
       </Link>
 
