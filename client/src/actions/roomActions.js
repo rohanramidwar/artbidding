@@ -34,7 +34,7 @@ export const createPost = (newPost, navigate) => async (dispatch) => {
 
 export const getRoom = (roomId, navigate) => async (dispatch) => {
   try {
-    const toastId = toast("⏳ Fetching room...");
+    const toastId = toast("Loading..");
 
     const { data } = await api.fetchRoom(roomId);
 
@@ -46,7 +46,7 @@ export const getRoom = (roomId, navigate) => async (dispatch) => {
   } catch (err) {
     console.log(err);
 
-    toast.error("Error fetching room");
+    // toast.error("Error fetching room");
   }
 };
 
@@ -62,7 +62,7 @@ export const joinRoom = (idz) => async (dispatch) => {
   } catch (err) {
     console.log(err);
 
-    toast.error("Error registering room");
+    // toast.error("Error registering room");
 
     dispatch({ type: END_LOADING });
   }
@@ -88,7 +88,7 @@ export const placeBid = (bidData, socket) => async (dispatch) => {
   } catch (err) {
     console.log(err);
 
-    toast.error("Error placing bid");
+    // toast.error("Error placing bid");
 
     dispatch({ type: END_LOADING });
   }
@@ -104,7 +104,7 @@ export const getAllBids = (roomId, socket) => async (dispatch) => {
   } catch (err) {
     console.log(err);
 
-    toast.error("Error fetching bids");
+    // toast.error("Error fetching bids");
 
     dispatch({ type: END_LOADING });
   }
@@ -122,7 +122,7 @@ export const getAllRooms = () => async (dispatch) => {
   } catch (err) {
     console.log(err);
 
-    toast.error("Error fetching rooms");
+    // toast.error("Error fetching rooms");
 
     dispatch({ type: END_LOADING });
   }
@@ -130,7 +130,7 @@ export const getAllRooms = () => async (dispatch) => {
 
 export const getOrders = (userId, navigate) => async (dispatch) => {
   try {
-    const toastId = toast("⏳ Fetching orders...");
+    const toastId = toast("Loading..");
 
     const { data } = await api.fetchOrders(userId);
 
@@ -142,7 +142,7 @@ export const getOrders = (userId, navigate) => async (dispatch) => {
   } catch (err) {
     console.log(err);
 
-    toast.error("Error fetching orders");
+    // toast.error("Error fetching orders");
 
     dispatch({ type: END_LOADING });
   }
