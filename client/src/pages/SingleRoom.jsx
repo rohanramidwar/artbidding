@@ -148,115 +148,125 @@ const SingleRoom = () => {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="px-6 sm:w-3/4 flex sm:flex-row flex-col gap-12 sm:justify-between py-12 text-slate-800">
+     <div className="flex justify-center">
+      <div className="w-full px-5 sm:px-14 flex sm:flex-row flex-col sm:justify-between text-slate-800">
         {/* left  */}
-        <div className="sm:w-1/2">
-          <p className="text-4xl pb-6">{selectedRoom?.roomName}</p>
-          <p>
-            Current bid:{" "}
-            <span className="text-lg">
-              &#36;
-              {selectedRoom?.currentBid
-                ? selectedRoom?.currentBid?.bid
-                : 0}{" "}
-            </span>
-          </p>
-          <p>Opening bid: &#36;{selectedRoom?.openingBid}</p>
-          <p>Ends on: {selectedRoom?.endsOn}</p>
-
-          {isAuctionEnded ? (
-            selectedRoom?.currentBid?.bidder?.clerkUserId === userId ? (
-              <div className="pt-3">
-                {/* <ConfettiEffect /> */}
-                <p className="pb-1 text-lg">
-                  Congratulations!🎉 You are the winner!
-                </p>
-                {selectedRoom?.claimed ? (
-                  <>
-                    <Button disabled={true}>Claimed</Button>
-                    <p className="pt-2 text-blue-600">
-                      Check order status in{" "}
-                      <span className="text-lg">my orders</span>
-                    </p>
-                  </>
-                ) : (
-                  <Button
-                    onClick={makePayment}
-                    disabled={inProcess}
-                    className="bg-blue-600 hover:bg-blue-500"
-                  >
-                    {inProcess ? "Claiming.." : "Claim item"}
-                  </Button>
-                )}
-              </div>
-            ) : selectedRoom?.currentBid?.bidder ? (
-              <p className="pt-3">
-                Sold to{" "}
-                <span className="text-lg text-blue-600">
-                  {selectedRoom.currentBid.bidder.firstName}{" "}
-                  {selectedRoom.currentBid.bidder.lastName}{" "}
-                </span>{" "}
-                🎉 for{" "}
-                <span className="text-lg text-green-600">
-                  &#36;
-                  {selectedRoom?.currentBid?.bid}
-                </span>
-              </p>
-            ) : (
-              <p className="pt-3 text-red-600">Sold to no one!</p>
-            )
-          ) : null}
-
+        <div className="py-7 flex justify-center sm:w-1/2">
           <img
-            className="py-6 w-full"
+            className="w-auto max-h-screen sm:pb-28"
             src={selectedRoom?.itemPic}
             alt="item-pic"
           />
         </div>
 
         {/* right */}
-        <div className="flex flex-col sm:pb-0 pb-12 sm:w-1/2">
-          <div className="pb-6 flex justify-between items-center">
-            <p className="text-2xl">Recent bids</p>
-            {isAuctionEnded && (
-              <p className="text-red-600">Auction has ended!</p>
-            )}
-            {!isAuctionEnded &&
-              (selectedRoom?.bidders.find(
-                (bidder) => bidder.clerkUserId === userId
-              ) ? (
-                <Button onClick={sendBid} disabled={isLoading}>
-                  {isLoading ? "Placing.." : "Place bid"}
-                </Button>
-              ) : (
-                <Button onClick={registerToBid} disabled={isLoading}>
-                  {isLoading ? "Registering.." : "Register to bid"}
-                </Button>
-              ))}
+        <div className="flex flex-col py-7 sm:w-1/2">
+          <div className="flex sm:flex-row flex-col sm:gap-0 gap-5 sm:justify-between">
+            <div className="text-sm">
+              <p className="text-4xl pb-5">{selectedRoom?.roomName}</p>
+              <p>
+                {isAuctionEnded ? "Winning Bid" : "Current Bid"}: &#36;
+                {selectedRoom?.currentBid
+                  ? selectedRoom?.currentBid?.bid
+                  : 0}{" "}
+              </p>
+              <p>Opening bid: &#36;{selectedRoom?.openingBid}</p>
+              <p>
+                {" "}
+                {isAuctionEnded ? "Ended On" : "Ends On"}:{" "}
+                {moment(selectedRoom?.endsOn).format(
+                  "dddd, MMMM Do YYYY, h:mm A"
+                )}
+              </p>
+
+              {isAuctionEnded ? (
+                selectedRoom?.currentBid?.bidder?.clerkUserId === userId ? (
+                  <div className="pt-5">
+                    <p className="pb-4 text-lg text-green-600">
+                      Congrats!!🥳 you are the winner!
+                    </p>
+                    {selectedRoom?.claimed ? (
+                      <>
+                        <Button disabled={true}>Claimed</Button>
+                        <p className="pt-5 text-blue-600">
+                          Check your order status in{" "}
+                          <span className="italic">my orders section</span>
+                        </p>
+                      </>
+                    ) : (
+                      <Button
+                        onClick={makePayment}
+                        disabled={inProcess}
+                        className="bg-blue-600 hover:bg-blue-500"
+                      >
+                        {inProcess ? "Claiming.." : "Claim item"}
+                      </Button>
+                    )}
+                  </div>
+                ) : selectedRoom?.currentBid?.bidder ? (
+                  <p className="pt-5 text-green-600">
+                    Item sold to{" "}
+                    <span className="italic">
+                      {selectedRoom.currentBid.bidder.firstName}{" "}
+                      {selectedRoom.currentBid.bidder.lastName}{" "}
+                    </span>{" "}
+                    🥳 for{" "}
+                    <span className="">
+                      &#36;
+                      {selectedRoom?.currentBid?.bid}
+                    </span>
+                  </p>
+                ) : (
+                  <p className="pt-5 text-red-600">Unsoled!</p>
+                )
+              ) : null}
+            </div>
+            <div>
+              {isAuctionEnded && (
+                <div className="p-2 px-3 text-sm bg-zinc-200">
+                  Auction Ended
+                </div>
+              )}
+              {!isAuctionEnded &&
+                (selectedRoom?.bidders.find(
+                  (bidder) => bidder.clerkUserId === userId
+                ) ? (
+                  <Button onClick={sendBid} disabled={isLoading}>
+                    {isLoading ? "Placing.." : "Place bid"}
+                  </Button>
+                ) : (
+                  <Button onClick={registerToBid} disabled={isLoading}>
+                    {isLoading ? "Registering.." : "Register to bid"}
+                  </Button>
+                ))}{" "}
+            </div>
           </div>
-          <div className="flex flex-col gap-6 bg-zinc-100 rounded-md p-6">
-            {!allBids.length && "No bids yet 🐣"}
-            {allBids?.map((bid) => (
-              <div className="flex gap-2 items-center" key={bid?._id}>
-                <img
-                  className="w-5 h-5 rounded-full"
-                  src={bid?.bidder?.profilePic}
-                  alt="profile-pic"
-                />
-                <p>
-                  <span className="text-lg">
-                    {bid?.bidder?.firstName} {bid?.bidder?.lastName}
-                  </span>{" "}
-                  outbid with <span className="text-lg ">&#36;{bid?.bid}</span>{" "}
-                </p>
-                &#xb7;
-                <span className="text-sm text-slate-600">
-                  {" "}
-                  {moment(bid?.createdAt).fromNow()}
-                </span>
+
+          <div className="pt-8">
+            <p className="pb-2">Bid History</p>
+            {!allBids.length ? (
+              <p className="text-sm">No bids yet</p>
+            ) : (
+              <div className="flex flex-col gap-5 max-h-72 overflow-y-auto p-5 border border-zinc-200">
+                {allBids?.map((bid) => (
+                  <div className="flex gap-2 items-center" key={bid?._id}>
+                    <img
+                      className="w-5 rounded-full"
+                      src={bid?.bidder?.profilePic}
+                      alt="profile-pic"
+                    />
+                    <p className="pb-[2px] text-sm">
+                      {bid?.bidder?.firstName} {bid?.bidder?.lastName} outbid
+                      with &#36;{bid?.bid} &#xb7;{" "}
+                      <span className="text-xs italic text-slate-600">
+                        {" "}
+                        {moment(bid?.createdAt).fromNow()}
+                      </span>
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>{" "}
