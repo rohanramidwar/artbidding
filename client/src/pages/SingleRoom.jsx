@@ -9,7 +9,7 @@ import { FETCH_ROOM, UPDATE_BIDS } from "@/constants/actionTypes";
 import moment from "moment";
 // import ConfettiEffect from "@/components/ConfettiEffect";
 import { loadStripe } from "@stripe/stripe-js";
-import dummy from "client/src/assets/dummy.jpg"
+import dummy from "../assets/dummy.png"
 
 const ENDPOINT = "https://bidding-wars-backend.vercel.app";
 
