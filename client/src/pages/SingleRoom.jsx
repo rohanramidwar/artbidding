@@ -7,9 +7,7 @@ import { getAllBids, joinRoom, placeBid } from "@/actions/roomActions";
 import { io } from "socket.io-client";
 import { FETCH_ROOM, UPDATE_BIDS } from "@/constants/actionTypes";
 import moment from "moment";
-// import ConfettiEffect from "@/components/ConfettiEffect";
 import { loadStripe } from "@stripe/stripe-js";
-import dummy from "../assets/dummy.png"
 
 const ENDPOINT = "https://bidding-wars-backend.vercel.app";
 
@@ -253,7 +251,7 @@ const SingleRoom = () => {
                   <div className="flex gap-2 items-center" key={bid?._id}>
                     <img
                       className="w-5 rounded-full"
-                      src={bid?.bidder?.profilePic ? bid?.bidder?.profilePic : dummy }
+                      src={bid?.bidder?.profilePic}
                       alt="profile-pic"
                     />
                     <p className="pb-[2px] text-sm">
