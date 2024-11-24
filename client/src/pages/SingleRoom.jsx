@@ -152,7 +152,7 @@ const SingleRoom = () => {
         {/* left  */}
         <div className="py-7 flex justify-center sm:w-1/2">
           <img
-            className="w-auto max-h-screen sm:pb-[3.5rem]"
+            className="w-auto max-h-screen sm:pb-28"
             src={selectedRoom?.itemPic}
             alt="item-pic"
           />
