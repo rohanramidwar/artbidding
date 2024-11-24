@@ -148,7 +148,7 @@ const SingleRoom = () => {
 
   return (
      <div className="flex justify-center">
-      <div className="w-full px-5 sm:px-14 min-height-screen flex sm:flex-row flex-col sm:justify-between text-slate-800">
+      <div className="w-full px-5 sm:px-14 min-h-screen flex sm:flex-row flex-col sm:justify-between text-slate-800">
         {/* left  */}
         <div className="py-7 flex justify-center sm:w-1/2">
           <img
