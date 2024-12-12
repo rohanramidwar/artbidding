@@ -4,32 +4,22 @@ import { getAllRooms } from "@/actions/roomActions";
 import Hero from "@/components/Hero";
 import RoomCard from "@/components/RoomCard";
 
-// Defining the shimmer animation in a style tag that will be embedded in the component
 const CustomSkeleton = () => {
   return (
-    <div className="border border-zinc-300">
-      {/* Image placeholder */}
-      <div className="flex justify-center items-center h-56">
-        <div className="w-full h-44 mx-5 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer bg-[length:400%_100%]" />
+    <div className="flex flex-col border-2 border-slate-200 border-b-indigo-500 bg-white rounded-md shadow-sm animate-pulse">
+      <div className="flex justify-center items-center h-56 bg-gray-100">
+        <div className="w-48 h-56 flex items-center justify-center"></div>
       </div>
-
-      {/* Content placeholder */}
-      <div className="p-2 pb-5 pt-0">
-        {/* Room name placeholder */}
-        <div className="h-6 w-3/4 mx-auto mb-5 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer bg-[length:400%_100%]" />
-
-        {/* Current/Winning bid placeholder */}
-        <div className="h-4 w-2/3 mb-2 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer bg-[length:400%_100%]" />
-
-        {/* Opening bid placeholder */}
-        <div className="h-4 w-1/2 mb-2 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer bg-[length:400%_100%]" />
-
-        {/* Date placeholder */}
-        <div className="h-4 w-4/5 mb-2 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer bg-[length:400%_100%]" />
-
-        {/* Button placeholder */}
+      <div className="rounded-b-md h-full p-5 space-y-3">
+        <div className="h-6 w-3/4 bg-gray-300 rounded animate-pulse"></div>
+        <div className="space-y-2">
+          <div className="h-4 w-1/2 bg-gray-300 rounded animate-pulse"></div>
+          <div className="h-4 w-1/2 bg-gray-300 rounded animate-pulse"></div>
+          <div className="h-4 w-2/3 bg-gray-300 rounded animate-pulse"></div>
+          <div className="h-4 w-full bg-gray-300 rounded animate-pulse"></div>
+        </div>
         <div className="flex justify-end pt-3">
-          <div className="h-9 w-24 rounded-md bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer bg-[length:400%_100%]" />
+          <div className="h-10 w-24 bg-gray-300 rounded-md animate-pulse"></div>
         </div>
       </div>
     </div>
@@ -61,7 +51,7 @@ const Homepage = () => {
   const skeletonCount = 4;
 
   return (
-    <div className="text-slate-800">
+    <div className="text-slate-900">
       <style jsx global>{`
         @keyframes shimmer {
           0% {
@@ -78,8 +68,10 @@ const Homepage = () => {
       `}</style>
 
       <Hero />
-      <div className="p-5 sm:p-14">
-        <p className="text-xl uppercase">Live auctions</p>
+      <div className="p-5 pt-0 sm:p-14 sm:pt-0">
+        <p className="text-2xl font-semibold lowercase text-[#414ea1]">
+          Live auctions
+        </p>
         <div className="py-8">
           {isLoading ? (
             <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
@@ -98,7 +90,9 @@ const Homepage = () => {
           )}
         </div>
 
-        <p className="text-xl uppercase">Past auctions</p>
+        <p className="pt-5 text-2xl font-semibold lowercase text-[#414ea1]">
+          Past auctions
+        </p>
         <div className="py-8">
           {isLoading ? (
             <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
