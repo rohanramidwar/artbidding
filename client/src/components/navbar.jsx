@@ -28,12 +28,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex justify-between py-2 px-5 sm:px-14 bg-zinc-100 shadow items-center text-slate-800">
+  <nav className="flex justify-between py-2 px-5 sm:px-12  bg-[#fffaf1] items-center text-slate-800">
       <Link to="/">
         <div className="flex items-center gap-2">
           <img className="sm:hidden block w-8 h-8" src={bidLogo} alt="b" />
-          <p className="hidden sm:block text-4xl case">
-            BIDDING<span className="text-gray-500">WARS</span>
+          <p className="font-medium lowercase text-[#414ea1] hidden sm:block text-4xl case">
+            biddingwars
           </p>
         </div>
       </Link>
