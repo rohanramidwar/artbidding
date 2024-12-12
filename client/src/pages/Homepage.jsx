@@ -8,7 +8,7 @@ const CustomSkeleton = () => {
   return (
     <div className="flex flex-col border-2 border-slate-200 border-b-indigo-500 bg-white rounded-md shadow-sm animate-pulse">
       <div className="flex justify-center items-center h-56 bg-gray-100">
-        <div className="w-48 h-56 flex items-center justify-center"></div>
+        <div className="p-5 w-48 h-56 flex items-center justify-center"></div>
       </div>
       <div className="rounded-b-md h-full p-5 space-y-3">
         <div className="h-6 w-3/4 bg-gray-300 rounded animate-pulse"></div>
