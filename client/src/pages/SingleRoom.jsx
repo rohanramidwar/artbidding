@@ -15,6 +15,7 @@ const SingleRoom = () => {
   const dispatch = useDispatch();
   const socketRef = useRef(); //current socket
   const [inProcess, setInProcess] = useState(false);
+  const [timeLeft, setTimeLeft] = useState("");
 
   const { isSignedIn, userId } = useAuth();
   const { isLoading, selectedRoom, allBids } = useSelector(
@@ -27,6 +28,48 @@ const SingleRoom = () => {
     return endDate <= new Date();
   }, [selectedRoom?.endsOn]);
 
+
+  // Time left countdown effect
+  useEffect(() => {
+    // Only set up countdown if auction hasn't ended
+    if (!isAuctionEnded && selectedRoom?.endsOn) {
+      const calculateTimeLeft = () => {
+        const endDate = moment(selectedRoom.endsOn);
+        const now = moment();
+
+        if (endDate.isSameOrBefore(now)) {
+          setTimeLeft("Auction Ended");
+          return;
+        }
+
+        const duration = moment.duration(endDate.diff(now));
+
+        // Format time left
+        const days = duration.days();
+        const hours = duration.hours();
+        const minutes = duration.minutes();
+        const seconds = duration.seconds();
+
+        let timeLeftString = "";
+        if (days > 0) timeLeftString += `${days}d `;
+        if (hours > 0) timeLeftString += `${hours}h `;
+        timeLeftString += `${minutes}m ${seconds}s`;
+
+        setTimeLeft(timeLeftString);
+      };
+
+      // Initial calculation
+      calculateTimeLeft();
+
+      // Update every second
+      const timer = setInterval(calculateTimeLeft, 1000);
+
+      // Cleanup interval on component unmount or when auction ends
+      return () => clearInterval(timer);
+    }
+  }, [selectedRoom?.endsOn, isAuctionEnded]);
+
+  
   const registerToBid = () => {
     const roomId = selectedRoom?._id;
     if (isSignedIn) {
@@ -161,10 +204,12 @@ const SingleRoom = () => {
         {/* right */}
         <div className="flex flex-col py-7 sm:w-1/2">
           <div className="flex sm:flex-row flex-col sm:gap-0 gap-5 sm:justify-between">
-            <div className="text-sm">
-              <p className="text-4xl pb-5">{selectedRoom?.roomName}</p>
+            <div className="flex flex-col gap-3">
+              <p className="text-4xl font-medium lowercase text-[#414ea1]">
+                {selectedRoom?.roomName}
+              </p>
               <p>
-                {isAuctionEnded ? "Winning Bid" : "Current Bid"}: &#36;
+                {isAuctionEnded ? "Winning bid" : "Current bid"}: &#36;
                 {selectedRoom?.currentBid
                   ? selectedRoom?.currentBid?.bid
                   : 0}{" "}
@@ -172,22 +217,29 @@ const SingleRoom = () => {
               <p>Opening bid: &#36;{selectedRoom?.openingBid}</p>
               <p>
                 {" "}
-                {isAuctionEnded ? "Ended On" : "Ends On"}:{" "}
+                {isAuctionEnded ? "Ended on" : "Ends on"}:{" "}
                 {moment(selectedRoom?.endsOn).format(
                   "dddd, MMMM Do YYYY, h:mm A"
                 )}
               </p>
 
+              {/* Time Left Countdown */}
+              {!isAuctionEnded && (
+                <p className="text-red-500 font-semibold">
+                  Time Left: {timeLeft}
+                </p>
+              )}
+
               {isAuctionEnded ? (
                 selectedRoom?.currentBid?.bidder?.clerkUserId === userId ? (
                   <div className="pt-5">
-                    <p className="pb-4 text-lg text-green-600">
+                    <p className="pb-4 text-lg font-medium lowercase text-green-600">
                       Congrats!!🥳 you are the winner!
                     </p>
                     {selectedRoom?.claimed ? (
                       <>
                         <Button disabled={true}>Claimed</Button>
-                        <p className="pt-5 text-blue-600">
+                        <p className="pt-5 text-blue-600 text-lg font-medium lowercase">
                           Check your order status in{" "}
                           <span className="italic">my orders section</span>
                         </p>
@@ -196,14 +248,14 @@ const SingleRoom = () => {
                       <Button
                         onClick={makePayment}
                         disabled={inProcess}
-                        className="bg-blue-600 hover:bg-blue-500"
+                        className="shadow-lg shadow-blue-500/50  bg-blue-500 hover:bg-blue-700"
                       >
                         {inProcess ? "Claiming.." : "Claim item"}
                       </Button>
                     )}
                   </div>
                 ) : selectedRoom?.currentBid?.bidder ? (
-                  <p className="pt-5 text-green-600">
+                  <p className="pt-5 text-lg font-medium lowercase text-green-600">
                     Item sold to{" "}
                     <span className="italic">
                       {selectedRoom.currentBid.bidder.firstName}{" "}
@@ -216,25 +268,31 @@ const SingleRoom = () => {
                     </span>
                   </p>
                 ) : (
-                  <p className="pt-5 text-red-600">Unsoled!</p>
+                  <p className="pt-5 text-red-600 text-lg font-medium lowercase">
+                    Unsold!
+                  </p>
                 )
               ) : null}
             </div>
             <div>
               {isAuctionEnded && (
-                <div className="p-2 px-3 text-sm bg-zinc-200">
+                <Button variant={"disabled"} className="bg-zinc-200">
                   Auction Ended
-                </div>
+                </Button>
               )}
               {!isAuctionEnded &&
                 (selectedRoom?.bidders.find(
                   (bidder) => bidder.clerkUserId === userId
                 ) ? (
-                  <Button onClick={sendBid} disabled={isLoading}>
+                  <Button onClick={sendBid} className="" disabled={isLoading}>
                     {isLoading ? "Placing.." : "Place bid"}
                   </Button>
                 ) : (
-                  <Button onClick={registerToBid} disabled={isLoading}>
+                  <Button
+                    className=""
+                    onClick={registerToBid}
+                    disabled={isLoading}
+                  >
                     {isLoading ? "Registering.." : "Register to bid"}
                   </Button>
                 ))}{" "}
@@ -242,11 +300,11 @@ const SingleRoom = () => {
           </div>
 
           <div className="pt-8">
-            <p className="pb-2">Bid History</p>
+            <p className="pb-5 font-medium">Bid history</p>
             {!allBids.length ? (
               <p className="text-sm">No bids yet</p>
             ) : (
-              <div className="flex flex-col gap-5 max-h-72 overflow-y-auto p-5 border border-zinc-200">
+              <div className="flex flex-col gap-5 rounded-md max-h-72 overflow-y-auto px-5 py-8 border-2 border-slate-200 border-b-indigo-500 bg-white shadow-sm">
                 {allBids?.map((bid) => (
                   <div className="flex gap-2 items-center" key={bid?._id}>
                     <img
